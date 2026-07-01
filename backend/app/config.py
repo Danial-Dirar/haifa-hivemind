@@ -43,6 +43,7 @@ class Settings(BaseSettings):
     # --- Storage --------------------------------------------------------
     upload_dir: Path = DATA_DIR / "uploads"
     training_dir: Path = DATA_DIR / "training"
+    chat_images_dir: Path = DATA_DIR / "chat_images"  # images sent inside chats
     db_path: Path = DATA_DIR / "hivemind.db"
 
     # --- Adapter (LoRA) -------------------------------------------------
@@ -50,7 +51,7 @@ class Settings(BaseSettings):
     adapter_model_tag: str = "qwen2.5vl-haifa"
 
     def ensure_dirs(self) -> None:
-        for p in (self.chroma_dir, self.upload_dir, self.training_dir):
+        for p in (self.chroma_dir, self.upload_dir, self.training_dir, self.chat_images_dir):
             p.mkdir(parents=True, exist_ok=True)
 
 

@@ -16,6 +16,9 @@ SYSTEM_BASE = (
     "question instead of guessing.\n"
     "2. Cite sources inline as [filename] when you use them.\n"
     "3. Be precise with scientific terms, units, strains, and methods.\n"
+    "4. Reply in the SAME language the user writes in. If they write in Bengali "
+    "(বাংলা) or romanized Bengali/Banglish, reply naturally in Bengali. Keep "
+    "scientific/technical terms in English where that is standard.\n"
 )
 
 RECONSIDER_NOTE = (

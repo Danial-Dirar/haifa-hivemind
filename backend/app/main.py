@@ -28,6 +28,8 @@ async def lifespan(app: FastAPI):
     yield
 
 
+settings.ensure_dirs()  # must exist before mounting static dirs below
+
 app = FastAPI(title="Haifa HiveMind", version=__version__, lifespan=lifespan)
 
 # Desktop shell loads from file:// or a dev server; allow local origins.
@@ -44,6 +46,13 @@ app.include_router(conversations.router)
 app.include_router(chat.router)
 app.include_router(feedback.router)
 app.include_router(training.router)
+
+# Serve images that were sent inside chats (for reloading saved conversations).
+app.mount(
+    "/chat-images",
+    StaticFiles(directory=str(settings.chat_images_dir)),
+    name="chat-images",
+)
 
 
 @app.get("/health")

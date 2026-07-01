@@ -13,7 +13,7 @@
         width: 74px; height: 74px; border-radius: 20px;
         background: radial-gradient(circle at 30% 25%, #ffd54a, #f5b301);
         box-shadow: 0 12px 40px rgba(245,179,1,0.35);
-        display: grid; place-items: center; font-size: 34px;
+        display: grid; place-items: center;
       }
       .name { font-size: 20px; font-weight: 700; letter-spacing: 0.3px; }
       .sub { font-family: ui-monospace, monospace; font-size: 11px; color: #565b66; text-transform: uppercase; letter-spacing: 2px; }
@@ -24,7 +24,13 @@
     </style>
   </head>
   <body>
-    <div class="mark">🧠</div>
+    <div class="mark">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+        <polygon points="12,3 19.8,7.5 19.8,16.5 12,21 4.2,16.5 4.2,7.5"
+          fill="none" stroke="#1a1400" stroke-width="1.9" stroke-linejoin="round"/>
+        <circle cx="12" cy="12" r="2.4" fill="#1a1400"/>
+      </svg>
+    </div>
     <div style="text-align:center">
       <div class="name">Haifa HiveMind</div>
       <div class="sub">Haifa Intelligence</div>

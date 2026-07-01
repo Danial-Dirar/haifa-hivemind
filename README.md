@@ -1,10 +1,22 @@
-# Haifa HiveMind 🧠
+<p align="center">
+  <img src="docs/logo.png" width="132" alt="Haifa HiveMind logo" />
+</p>
 
-**A local, private research AI — by Haifa Intelligence.**
+<h1 align="center">Haifa HiveMind</h1>
 
-Runs entirely on the client's own machine. No cloud, no data leaves the PC.
-Built for microbiology research: upload papers (PDF / DOCX), drop screenshots,
-ask grounded questions, and let it **learn from your feedback** over time.
+<p align="center"><b>A local, private research AI — by Haifa Intelligence.</b></p>
+
+<p align="center">
+  Runs entirely on the client's own machine — no cloud, no data leaves the PC.<br/>
+  Built for microbiology research: upload papers (PDF / DOCX), drop screenshots,<br/>
+  ask grounded questions, and let it <b>learn from your feedback</b> over time.
+</p>
+
+<p align="center">
+  <img alt="on-device" src="https://img.shields.io/badge/AI-100%25%20on--device-f5b301?style=flat-square" />
+  <img alt="stack" src="https://img.shields.io/badge/Ollama%20·%20Qwen2.5--VL-informational?style=flat-square&color=38bdf8" />
+  <img alt="ui" src="https://img.shields.io/badge/Electron%20·%20React-14171d?style=flat-square" />
+</p>
 
 ---
 

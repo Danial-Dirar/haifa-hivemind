@@ -70,7 +70,8 @@ CREATE TABLE IF NOT EXISTS chat_messages (
     conversation_id INTEGER NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
     role        TEXT NOT NULL,             -- user | assistant
     content     TEXT NOT NULL,
-    sources     TEXT DEFAULT '[]',         -- json list of filenames
+    sources     TEXT DEFAULT '[]',         -- json list of source filenames
+    images      TEXT DEFAULT '[]',         -- json list of stored chat-image filenames
     created_at  TEXT DEFAULT (datetime('now'))
 );
 CREATE INDEX IF NOT EXISTS idx_chat_messages_conv ON chat_messages(conversation_id);
@@ -118,8 +119,16 @@ CREATE TABLE IF NOT EXISTS training_runs (
 """
 
 
+def _migrate(conn: sqlite3.Connection) -> None:
+    """Additive migrations for DBs created by earlier versions."""
+    cols = {r["name"] for r in conn.execute("PRAGMA table_info(chat_messages)")}
+    if "images" not in cols:
+        conn.execute("ALTER TABLE chat_messages ADD COLUMN images TEXT DEFAULT '[]'")
+
+
 def init_db() -> None:
     settings.ensure_dirs()
     conn = get_conn()
     conn.executescript(SCHEMA)
+    _migrate(conn)
     conn.commit()

@@ -16,6 +16,7 @@ release/
 backend/data/uploads/*
 backend/data/chroma/*
 backend/data/training/*
+backend/data/chat_images/*
 backend/data/*.db
 backend/data/*.db-*
 !backend/data/**/.gitkeep

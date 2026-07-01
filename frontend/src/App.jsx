@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { Send, Paperclip, X, Sparkles } from "lucide-react";
+import { Send, Paperclip, X } from "lucide-react";
 import PowerControls from "./components/PowerControls.jsx";
 import DocumentsPanel from "./components/DocumentsPanel.jsx";
 import TrainingPanel from "./components/TrainingPanel.jsx";
-import ChatHistory from "./components/ChatHistory.jsx";
+import ChatSidebar from "./components/ChatSidebar.jsx";
 import TrashModal from "./components/TrashModal.jsx";
 import Message from "./components/Message.jsx";
 import * as api from "./lib/api.js";
@@ -14,7 +14,7 @@ const uid = () => `m${++idc}`;
 const SUGGESTIONS = [
   "Summarise the key findings across my uploaded papers",
   "Compare the antibiotic resistance mechanisms discussed",
-  "What growth media and conditions are mentioned?",
+  "আমার আপলোড করা পেপারগুলোর মূল ফলাফল বাংলায় বুঝিয়ে দাও",
 ];
 
 export default function App() {
@@ -39,14 +39,10 @@ export default function App() {
   };
 
   async function refreshConversations() {
-    try {
-      setConversations(await api.listConversations());
-    } catch {}
+    try { setConversations(await api.listConversations()); } catch {}
   }
   async function refreshTrashCount() {
-    try {
-      setTrashCount((await api.listTrash()).length);
-    } catch {}
+    try { setTrashCount((await api.listTrash()).length); } catch {}
   }
 
   useEffect(() => {
@@ -62,10 +58,7 @@ export default function App() {
     setMessages((ms) => {
       const copy = [...ms];
       for (let i = copy.length - 1; i >= 0; i--) {
-        if (copy[i].role === "assistant") {
-          copy[i] = fn(copy[i]);
-          break;
-        }
+        if (copy[i].role === "assistant") { copy[i] = fn(copy[i]); break; }
       }
       return copy;
     });
@@ -87,13 +80,7 @@ export default function App() {
 
     try {
       await api.streamChat(
-        {
-          query,
-          conversationId,
-          reconsider,
-          history: buildHistory(),
-          images: imgs.map((i) => i.file),
-        },
+        { query, conversationId, reconsider, history: buildHistory(), images: imgs.map((i) => i.file) },
         (evt) => {
           if (evt.type === "conversation") {
             if (conversationId == null) setConversationId(evt.id);
@@ -146,6 +133,7 @@ export default function App() {
           role: m.role,
           content: m.content,
           sources: m.sources || [],
+          images: (m.images || []).map((fn) => api.chatImageUrl(fn)),
           streaming: false,
           query: m.role === "assistant" ? lastUserQuery : undefined,
         };
@@ -169,37 +157,33 @@ export default function App() {
     }
   }
 
-  async function accept(msg) {
-    setMessages((ms) => ms.map((m) => (m.id === msg.id ? { ...m, feedback: "accept" } : m)));
+  async function renameConversation(id, title) {
     try {
-      await api.sendFeedback({
-        query: msg.query,
-        answer: msg.content,
-        verdict: "accept",
-        context: msg.sources,
-      });
+      await api.renameConversation(id, title);
+      await refreshConversations();
     } catch (e) {
       showToast(e.message, true);
     }
+  }
+
+  async function accept(msg) {
+    setMessages((ms) => ms.map((m) => (m.id === msg.id ? { ...m, feedback: "accept" } : m)));
+    try {
+      await api.sendFeedback({ query: msg.query, answer: msg.content, verdict: "accept", context: msg.sources });
+    } catch (e) { showToast(e.message, true); }
   }
 
   async function reject(msg, note) {
     setMessages((ms) => ms.map((m) => (m.id === msg.id ? { ...m, feedback: "reject" } : m)));
     try {
       const res = await api.sendFeedback({
-        query: msg.query,
-        answer: msg.content,
-        verdict: "reject",
-        note,
-        context: msg.sources,
+        query: msg.query, answer: msg.content, verdict: "reject", note, context: msg.sources,
       });
       if (res.reconsider) {
         showToast("Rethinking with your feedback…");
         await runQuery({ query: msg.query, reconsider: true });
       }
-    } catch (e) {
-      showToast(e.message, true);
-    }
+    } catch (e) { showToast(e.message, true); }
   }
 
   function addImages(files) {
@@ -213,6 +197,17 @@ export default function App() {
 
   return (
     <div className="app">
+      <ChatSidebar
+        conversations={conversations}
+        activeId={conversationId}
+        trashCount={trashCount}
+        onNew={newChat}
+        onSelect={selectConversation}
+        onDelete={deleteConversation}
+        onRename={renameConversation}
+        onOpenTrash={() => setTrashOpen(true)}
+      />
+
       <main className="main">
         <div className="topbar">
           <div>
@@ -233,7 +228,7 @@ export default function App() {
               <div className="big">Ask your <span className="accent-text">private</span> research AI</div>
               <div className="muted" style={{ maxWidth: 460 }}>
                 Everything runs on this machine. Upload papers on the right, then ask away —
-                answers are grounded in your own library.
+                answers are grounded in your own library. বাংলাতেও জিজ্ঞেস করতে পারেন।
               </div>
               <div className="suggestions">
                 {SUGGESTIONS.map((s) => (
@@ -265,7 +260,7 @@ export default function App() {
             <textarea
               rows={1}
               value={input}
-              placeholder={offline ? "Turn the engine on to chat…" : "Ask about your research…"}
+              placeholder={offline ? "Turn the engine on to chat…" : "Ask about your research… / আপনার গবেষণা নিয়ে জিজ্ঞেস করুন…"}
               disabled={offline}
               onChange={(e) => {
                 setInput(e.target.value);
@@ -273,10 +268,7 @@ export default function App() {
                 e.target.style.height = Math.min(e.target.scrollHeight, 180) + "px";
               }}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  send();
-                }
+                if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
               }}
             />
             <div className="composer-actions">
@@ -288,36 +280,14 @@ export default function App() {
               </button>
             </div>
           </div>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            multiple
-            hidden
-            onChange={(e) => addImages(e.target.files)}
-          />
+          <input ref={fileRef} type="file" accept="image/*" multiple hidden
+            onChange={(e) => addImages(e.target.files)} />
         </div>
       </main>
 
-      <aside className="sidebar">
-        <div className="brand">
-          <div className="brand-mark"><Sparkles size={20} /></div>
-          <div>
-            <div className="brand-name">Haifa HiveMind</div>
-            <div className="brand-sub">Haifa Intelligence</div>
-          </div>
-        </div>
-        <div className="sidebar-scroll">
+      <aside className="sidebar right">
+        <div className="sidebar-scroll" style={{ paddingTop: 12 }}>
           <PowerControls onToast={showToast} onStateChange={setModelState} />
-          <ChatHistory
-            conversations={conversations}
-            activeId={conversationId}
-            trashCount={trashCount}
-            onNew={newChat}
-            onSelect={selectConversation}
-            onDelete={deleteConversation}
-            onOpenTrash={() => setTrashOpen(true)}
-          />
           <DocumentsPanel onToast={showToast} />
           <TrainingPanel onToast={showToast} />
         </div>

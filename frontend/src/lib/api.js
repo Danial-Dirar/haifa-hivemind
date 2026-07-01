@@ -44,6 +44,9 @@ export const createConversation = (title = "New chat") =>
     body: JSON.stringify({ title }),
   });
 export const getConversation = (id) => j(`/conversations/${id}`);
+export const searchConversations = (q) =>
+  j(`/conversations/search?q=${encodeURIComponent(q)}`);
+export const chatImageUrl = (name) => `${API_BASE}/chat-images/${name}`;
 export const renameConversation = (id, title) =>
   j(`/conversations/${id}`, {
     method: "PATCH",

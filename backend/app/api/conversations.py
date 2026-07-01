@@ -28,6 +28,11 @@ async def create(body: CreateIn) -> dict:
     return {"id": cid, "title": body.title}
 
 
+@router.get("/search")
+async def search(q: str = "") -> list[dict]:
+    return history.search_conversations(q)
+
+
 @router.get("/trash")
 async def trash() -> list[dict]:
     return history.list_trash()
