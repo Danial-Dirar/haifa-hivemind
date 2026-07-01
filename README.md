@@ -24,27 +24,9 @@ ask grounded questions, and let it **learn from your feedback** over time.
 
 ## Architecture
 
-```
-┌─────────────────────────────┐        ┌────────────────────────────┐
-│  Electron Desktop App        │        │  (future) Mobile App        │
-│  React UI · Odyssus theme    │  LAN   │  same REST API over Wi-Fi   │
-└──────────────┬──────────────┘  HTTP  └──────────────┬─────────────┘
-               │  http://127.0.0.1:8756               │
-               ▼                                       ▼
-        ┌───────────────────────────────────────────────────┐
-        │  FastAPI backend  (app/)                           │
-        │  • RAG: Chroma vector store + doc ingestion        │
-        │  • Feedback + preference memory                    │
-        │  • Model lifecycle (on/pause/off)                  │
-        │  • Idle-time QLoRA training                        │
-        └───────────────┬───────────────────────────────────┘
-                        │  HTTP
-                        ▼
-                 ┌──────────────┐
-                 │   Ollama     │  Qwen2.5-VL 7B  +  nomic-embed-text
-                 │  (GPU/VRAM)  │
-                 └──────────────┘
-```
+![Haifa HiveMind architecture](docs/architecture.png)
+
+<sub>Source: [`docs/architecture.svg`](docs/architecture.svg)</sub>
 
 **Why API-first:** one local backend serves every client. Today it's the Electron
 desktop app; a mobile app later just points at the same machine over the LAN.

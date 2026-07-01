@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 900" font-family="'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <radialGradient id="glowA" cx="18%" cy="0%" r="60%">
+      <stop offset="0%" stop-color="#f5b301" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#f5b301" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowC" cx="95%" cy="8%" r="55%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="box" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#171a20"/>
+      <stop offset="100%" stop-color="#0f1116"/>
+    </linearGradient>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd54a"/>
+      <stop offset="100%" stop-color="#f5b301"/>
+    </linearGradient>
+    <linearGradient id="backend" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a1e26"/>
+      <stop offset="100%" stop-color="#12151b"/>
+    </linearGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+    <marker id="ah" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#f5b301"/>
+    </marker>
+    <marker id="ahc" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#38bdf8"/>
+    </marker>
+    <marker id="ahc2" markerWidth="9" markerHeight="9" refX="0.5" refY="3" orient="auto">
+      <path d="M7,0 L0,3 L7,6 Z" fill="#38bdf8"/>
+    </marker>
+  </defs>
+
+  <!-- backdrop -->
+  <rect width="1180" height="900" fill="#0a0b0d"/>
+  <rect width="1180" height="900" fill="url(#glowA)"/>
+  <rect width="1180" height="900" fill="url(#glowC)"/>
+
+  <!-- ===== Header ===== -->
+  <g>
+    <rect x="44" y="34" width="46" height="46" rx="13" fill="url(#mark)"/>
+    <polygon points="67,45 77.4,51 77.4,63 67,69 56.6,63 56.6,51" fill="none" stroke="#1a1400" stroke-width="2.4" stroke-linejoin="round"/>
+    <circle cx="67" cy="57" r="3" fill="#1a1400"/>
+    <text x="106" y="55" font-size="23" font-weight="700" fill="#e7e9ee">Haifa HiveMind</text>
+    <text x="106" y="76" font-size="12" letter-spacing="2" fill="#f5b301" font-family="ui-monospace, monospace">HAIFA INTELLIGENCE · ARCHITECTURE</text>
+    <text x="1136" y="55" font-size="12" text-anchor="end" fill="#565b66" font-family="ui-monospace, monospace">100% ON-DEVICE</text>
+    <text x="1136" y="74" font-size="12" text-anchor="end" fill="#565b66" font-family="ui-monospace, monospace">nothing leaves the PC</text>
+  </g>
+
+  <!-- layer tags -->
+  <text x="30" y="185" font-size="11" fill="#3d424c" font-family="ui-monospace, monospace" transform="rotate(-90 30 185)" text-anchor="middle">CLIENTS</text>
+  <text x="30" y="450" font-size="11" fill="#3d424c" font-family="ui-monospace, monospace" transform="rotate(-90 30 450)" text-anchor="middle">API LAYER</text>
+  <text x="30" y="740" font-size="11" fill="#3d424c" font-family="ui-monospace, monospace" transform="rotate(-90 30 740)" text-anchor="middle">ENGINE</text>
+
+  <!-- ===== Clients ===== -->
+  <!-- Desktop -->
+  <g>
+    <rect x="120" y="120" width="330" height="112" rx="16" fill="url(#box)" stroke="#f5b301" stroke-opacity="0.45"/>
+    <text x="145" y="152" font-size="17" font-weight="600" fill="#e7e9ee">Electron Desktop App</text>
+    <text x="145" y="177" font-size="13" fill="#9aa0ab">React UI · Odyssus theme</text>
+    <text x="145" y="200" font-size="12" fill="#f5b301" font-family="ui-monospace, monospace">Windows · Linux · Wine-ready</text>
+  </g>
+  <!-- Mobile (future) -->
+  <g>
+    <rect x="730" y="120" width="330" height="112" rx="16" fill="url(#box)" stroke="#ffffff" stroke-opacity="0.14" stroke-dasharray="6 5"/>
+    <text x="755" y="152" font-size="17" font-weight="600" fill="#c7ccd6">Mobile App</text>
+    <text x="1035" y="150" font-size="10" text-anchor="end" fill="#565b66" font-family="ui-monospace, monospace">FUTURE</text>
+    <text x="755" y="177" font-size="13" fill="#8b909b">Same REST API over Wi-Fi</text>
+    <text x="755" y="200" font-size="12" fill="#8b909b" font-family="ui-monospace, monospace">shares the one local backend</text>
+  </g>
+  <!-- LAN pill -->
+  <g>
+    <rect x="527" y="160" width="126" height="32" rx="16" fill="#0e1014" stroke="#ffffff" stroke-opacity="0.14"/>
+    <text x="590" y="181" font-size="12" text-anchor="middle" fill="#38bdf8" font-family="ui-monospace, monospace">LAN · HTTP</text>
+  </g>
+  <line x1="450" y1="176" x2="527" y2="176" stroke="#38bdf8" stroke-opacity="0.5" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <line x1="653" y1="176" x2="730" y2="176" stroke="#38bdf8" stroke-opacity="0.5" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- converging arrows to backend -->
+  <path d="M285,232 C285,290 420,300 445,332" fill="none" stroke="#f5b301" stroke-width="2" marker-end="url(#ah)"/>
+  <path d="M895,232 C895,300 640,300 600,332" fill="none" stroke="#f5b301" stroke-width="2" stroke-opacity="0.55" marker-end="url(#ah)"/>
+  <rect x="470" y="286" width="205" height="26" rx="13" fill="#0a0b0d"/>
+  <text x="572" y="304" font-size="12" text-anchor="middle" fill="#8b909b" font-family="ui-monospace, monospace">http://127.0.0.1:8756</text>
+
+  <!-- ===== Backend ===== -->
+  <g>
+    <rect x="90" y="334" width="700" height="234" rx="18" fill="url(#backend)" stroke="#f5b301" stroke-opacity="0.30"/>
+    <circle cx="120" cy="366" r="5" fill="#f5b301"/>
+    <text x="136" y="371" font-size="18" font-weight="700" fill="#e7e9ee">FastAPI Backend</text>
+    <text x="292" y="371" font-size="12" fill="#565b66" font-family="ui-monospace, monospace">app/</text>
+
+    <!-- module chips -->
+    <g font-size="13" fill="#d3d7df">
+      <rect x="112" y="392" width="315" height="46" rx="10" fill="#0f1116" stroke="#ffffff" stroke-opacity="0.08"/>
+      <text x="128" y="413" font-weight="600">RAG · Retrieval</text>
+      <text x="128" y="430" font-size="11" fill="#8b909b">Chroma vector search + citations</text>
+
+      <rect x="453" y="392" width="315" height="46" rx="10" fill="#0f1116" stroke="#ffffff" stroke-opacity="0.08"/>
+      <text x="469" y="413" font-weight="600">Document Ingestion</text>
+      <text x="469" y="430" font-size="11" fill="#8b909b">PDF · DOCX · image (vision OCR)</text>
+
+      <rect x="112" y="446" width="315" height="46" rx="10" fill="#0f1116" stroke="#ffffff" stroke-opacity="0.08"/>
+      <text x="128" y="467" font-weight="600">Feedback + Memory</text>
+      <text x="128" y="484" font-size="11" fill="#8b909b">approve / reject · preference signals</text>
+
+      <rect x="453" y="446" width="315" height="46" rx="10" fill="#0f1116" stroke="#ffffff" stroke-opacity="0.08"/>
+      <text x="469" y="467" font-weight="600">Model Lifecycle</text>
+      <text x="469" y="484" font-size="11" fill="#8b909b">On · Pause · Off (GPU/RAM)</text>
+
+      <rect x="112" y="500" width="315" height="46" rx="10" fill="#0f1116" stroke="#ffffff" stroke-opacity="0.08"/>
+      <text x="128" y="521" font-weight="600">Chat History + Recycle Bin</text>
+      <text x="128" y="538" font-size="11" fill="#8b909b">saved chats · 30-day restore</text>
+
+      <rect x="453" y="500" width="315" height="46" rx="10" fill="#0f1116" stroke="#f5b301" stroke-opacity="0.25"/>
+      <text x="469" y="521" font-weight="600" fill="#f5d98a">Idle-time QLoRA Training</text>
+      <text x="469" y="538" font-size="11" fill="#8b909b">learns from approved answers</text>
+    </g>
+  </g>
+
+  <!-- ===== Storage (right column) ===== -->
+  <g>
+    <rect x="830" y="334" width="300" height="102" rx="16" fill="url(#box)" stroke="#38bdf8" stroke-opacity="0.35"/>
+    <text x="855" y="372" font-size="16" font-weight="600" fill="#e7e9ee">ChromaDB</text>
+    <text x="855" y="396" font-size="12" fill="#9aa0ab">Embedded vector store</text>
+    <text x="855" y="416" font-size="11" fill="#38bdf8" font-family="ui-monospace, monospace">document embeddings</text>
+
+    <rect x="830" y="466" width="300" height="102" rx="16" fill="url(#box)" stroke="#38bdf8" stroke-opacity="0.35"/>
+    <text x="855" y="504" font-size="16" font-weight="600" fill="#e7e9ee">SQLite</text>
+    <text x="855" y="528" font-size="12" fill="#9aa0ab">Local database</text>
+    <text x="855" y="548" font-size="11" fill="#38bdf8" font-family="ui-monospace, monospace">chats · feedback · memory</text>
+  </g>
+  <!-- backend <-> storage links -->
+  <line x1="790" y1="401" x2="830" y2="385" stroke="#38bdf8" stroke-width="1.8" marker-end="url(#ahc)" marker-start="url(#ahc2)"/>
+  <line x1="790" y1="501" x2="830" y2="517" stroke="#38bdf8" stroke-width="1.8" marker-end="url(#ahc)" marker-start="url(#ahc2)"/>
+
+  <!-- backend -> engine -->
+  <path d="M440,568 L440,632" fill="none" stroke="#f5b301" stroke-width="2" marker-end="url(#ah)"/>
+  <rect x="360" y="588" width="160" height="26" rx="13" fill="#0a0b0d"/>
+  <text x="440" y="606" font-size="12" text-anchor="middle" fill="#8b909b" font-family="ui-monospace, monospace">HTTP · localhost</text>
+
+  <!-- ===== Engine (Ollama) ===== -->
+  <g>
+    <rect x="150" y="634" width="640" height="188" rx="18" fill="url(#backend)" stroke="#f5b301" stroke-opacity="0.30"/>
+    <circle cx="180" cy="668" r="5" fill="#34d399"/>
+    <text x="196" y="673" font-size="18" font-weight="700" fill="#e7e9ee">Ollama</text>
+    <text x="292" y="673" font-size="12" fill="#565b66" font-family="ui-monospace, monospace">model server</text>
+    <rect x="640" y="652" width="128" height="30" rx="15" fill="#0e1014" stroke="#34d399" stroke-opacity="0.4"/>
+    <text x="704" y="672" font-size="12" text-anchor="middle" fill="#34d399" font-family="ui-monospace, monospace">GPU · VRAM</text>
+
+    <rect x="176" y="704" width="290" height="94" rx="12" fill="#0f1116" stroke="#ffffff" stroke-opacity="0.08"/>
+    <text x="198" y="736" font-size="15" font-weight="600" fill="#f5d98a">Qwen2.5-VL 7B</text>
+    <text x="198" y="759" font-size="12" fill="#9aa0ab">Chat + Vision</text>
+    <text x="198" y="780" font-size="11" fill="#8b909b" font-family="ui-monospace, monospace">reads text &amp; screenshots</text>
+
+    <rect x="482" y="704" width="286" height="94" rx="12" fill="#0f1116" stroke="#ffffff" stroke-opacity="0.08"/>
+    <text x="504" y="736" font-size="15" font-weight="600" fill="#8fd0f2">nomic-embed-text</text>
+    <text x="504" y="759" font-size="12" fill="#9aa0ab">Embeddings</text>
+    <text x="504" y="780" font-size="11" fill="#8b909b" font-family="ui-monospace, monospace">powers RAG retrieval</text>
+  </g>
+
+  <!-- footer -->
+  <text x="590" y="864" font-size="13" text-anchor="middle" fill="#565b66">
+    Private · On-device · Microbiology-focused  —  no cloud, no accounts, works fully offline
+  </text>
+</svg>
