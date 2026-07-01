@@ -1,0 +1,13 @@
+# Haifa HiveMind — optional training deps (idle-time QLoRA fine-tune)
+# Install on the client's GPU machine only. Requires CUDA-capable NVIDIA GPU.
+#   pip install -r requirements-train.txt
+#
+# Torch must match the client's CUDA version; see:
+#   https://pytorch.org/get-started/locally/
+torch>=2.4.0
+transformers>=4.48.0
+datasets>=3.2.0
+peft>=0.14.0
+trl>=0.13.0
+bitsandbytes>=0.45.0
+accelerate>=1.2.0

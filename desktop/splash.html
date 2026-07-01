@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      html, body { height: 100%; margin: 0; }
+      body {
+        background: radial-gradient(800px 500px at 50% 20%, rgba(245,179,1,0.08), transparent 60%), #0a0b0d;
+        color: #e7e9ee; font-family: system-ui, sans-serif;
+        display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px;
+      }
+      .mark {
+        width: 74px; height: 74px; border-radius: 20px;
+        background: radial-gradient(circle at 30% 25%, #ffd54a, #f5b301);
+        box-shadow: 0 12px 40px rgba(245,179,1,0.35);
+        display: grid; place-items: center; font-size: 34px;
+      }
+      .name { font-size: 20px; font-weight: 700; letter-spacing: 0.3px; }
+      .sub { font-family: ui-monospace, monospace; font-size: 11px; color: #565b66; text-transform: uppercase; letter-spacing: 2px; }
+      .bar { width: 180px; height: 3px; background: #1a1d24; border-radius: 3px; overflow: hidden; margin-top: 8px; }
+      .bar::after { content: ""; display: block; height: 100%; width: 40%; background: #f5b301; border-radius: 3px; animation: slide 1.2s infinite ease-in-out; }
+      @keyframes slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(350%); } }
+      .status { font-size: 12px; color: #8b909b; }
+    </style>
+  </head>
+  <body>
+    <div class="mark">🧠</div>
+    <div style="text-align:center">
+      <div class="name">Haifa HiveMind</div>
+      <div class="sub">Haifa Intelligence</div>
+    </div>
+    <div class="bar"></div>
+    <div class="status">Starting the AI engine…</div>
+  </body>
+</html>

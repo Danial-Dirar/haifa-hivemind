@@ -1,0 +1,23 @@
+# Haifa HiveMind — backend runtime deps
+# Target: Python 3.11 / 3.12  (NOT 3.14 yet — some wheels unavailable)
+
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+pydantic-settings==2.7.1
+httpx==0.28.1
+python-multipart==0.0.20
+
+# Vector store (embedded, no server)
+chromadb==0.5.23
+
+# Document ingestion
+pypdf==5.1.0
+python-docx==1.1.2
+pillow==11.1.0
+
+# ---------------------------------------------------------------------------
+# Training extras (heavy: torch + peft). Install only on the client GPU box:
+#   pip install -r requirements-train.txt
+# Kept out of the base runtime so the app boots fast without CUDA/torch.
+# ---------------------------------------------------------------------------

@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Node
+node_modules/
+dist/
+dist-electron/
+release/
+.vite/
+
+# App data (never commit user documents / models / training data)
+backend/data/uploads/*
+backend/data/chroma/*
+backend/data/training/*
+backend/data/*.db
+backend/data/*.db-*
+!backend/data/**/.gitkeep
+
+# Env & logs
+.env
+*.log
+.DS_Store
