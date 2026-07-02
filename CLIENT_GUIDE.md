@@ -11,23 +11,26 @@ just waiting for downloads).
 ## Step 1 — Install Ollama (the AI engine)
 
 1. Go to **https://ollama.com/download**
-2. Download the version for your computer (Windows) and run the installer.
+2. Download the version for your computer and run the installer.
 3. Click through — all default options are fine.
 
 That's it. Ollama runs quietly in the background.
 
-## Step 2 — Download the AI models
+## Step 2 — Install Haifa HiveMind
 
-Find the file **`setup_models`** we gave you and **double-click it**.
-A black window opens and downloads the AI brain (about 6 GB). Leave it until it
-says **"Models ready"**, then close it.
+- **Windows:** double-click **`Haifa HiveMind Setup.exe`**, accept the licence,
+  and follow the installer. A desktop icon appears when it's done.
+- **Linux:** make the **`Haifa HiveMind.AppImage`** executable and open it (the
+  licence is shown inside the app the first time).
 
-> Only needed once. This is what makes the AI work offline forever after.
+## Step 3 — First launch: nothing to do 🎉
 
-## Step 3 — Install Haifa HiveMind
+Open **Haifa HiveMind**. The very first time, it **downloads the AI models by
+itself** (about 6 GB) with a progress bar — just leave it open until it finishes.
+After that it's ready, works offline forever, and you'll never see this step again.
 
-Double-click **`Haifa HiveMind Setup.exe`** and follow the installer.
-When it finishes, a **Haifa HiveMind** icon appears on your desktop.
+> If it says Ollama isn't installed, click **Get Ollama**, install it, then press
+> **continue** — the app handles the rest automatically.
 
 ---
 
@@ -35,7 +38,7 @@ When it finishes, a **Haifa HiveMind** icon appears on your desktop.
 
 Open **Haifa HiveMind** from your desktop. You'll see:
 
-### 🔌 The power buttons (top-left)
+### 🔌 The power buttons (on the right)
 - **On** — starts the AI. Do this first.
 - **Pause** — frees your graphics card when you take a break (resumes in seconds).
 - **Off** — shuts the AI down completely so it uses no resources.

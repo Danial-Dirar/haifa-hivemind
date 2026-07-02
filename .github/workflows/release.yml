@@ -1,0 +1,84 @@
+name: Release
+
+# Builds native installers on each OS (PyInstaller can't cross-compile the
+# backend, so Windows is built on Windows and Linux on Linux), then a single
+# job attaches both to one GitHub Release. Trigger by pushing a tag: v0.1.0
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch: {}          # manual runs build artifacts without releasing
+
+permissions:
+  contents: write                 # needed to create the GitHub Release
+
+jobs:
+  build:
+    name: Build (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: win
+            pattern: "desktop/release/*.exe"
+          - os: ubuntu-latest
+            target: linux
+            pattern: "desktop/release/*.AppImage"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"   # backend target (NOT 3.14)
+
+      # 1) Frontend -> frontend/dist (bundled into the app as `web/`)
+      - name: Build frontend
+        working-directory: frontend
+        run: |
+          npm install
+          npm run build
+
+      # 2) Backend -> single self-contained binary (no Python needed on client)
+      - name: Bundle backend
+        working-directory: backend
+        run: |
+          pip install -r requirements.txt pyinstaller
+          pyinstaller hivemind-backend.spec
+
+      # 3) Package the desktop app (installer / AppImage)
+      - name: Build desktop installer
+        working-directory: desktop
+        run: |
+          npm install
+          npx electron-builder --${{ matrix.target }} --publish never
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: haifa-hivemind-${{ matrix.target }}
+          path: ${{ matrix.pattern }}
+          if-no-files-found: error
+
+  release:
+    name: Publish GitHub Release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist-artifacts   # each build's files land in a subfolder here
+
+      - name: Create / update release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist-artifacts/**/*
+          draft: true            # review the two files, then hit "Publish"
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -13,7 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app import __version__
-from app.api import chat, conversations, documents, feedback, model, training
+from app.api import chat, conversations, documents, feedback, model, setup, training
 from app.config import settings
 from app.core import history
 from app.core.db import init_db
@@ -40,6 +40,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(setup.router)
 app.include_router(model.router)
 app.include_router(documents.router)
 app.include_router(conversations.router)

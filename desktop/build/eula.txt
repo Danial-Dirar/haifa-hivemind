@@ -1,0 +1,87 @@
+HAIFA HIVEMIND - END USER LICENSE AGREEMENT
+A product of Haifa Intelligence
+
+Last updated: 2 July 2026
+
+PLEASE READ THIS AGREEMENT CAREFULLY. By installing or using Haifa HiveMind
+("the Software"), you agree to be bound by the terms below. If you do not agree
+to these terms, do not install or use the Software.
+
+
+1. LICENSE
+
+Haifa Intelligence ("we", "us", "our") grants you a personal, non-exclusive,
+non-transferable license to install and use the Software on hardware that you
+own or control, for your own research and productivity purposes.
+
+
+2. ACCEPTABLE AND ETHICAL USE
+
+You agree to use the Software lawfully and ethically. You will NOT use it to:
+  (a) violate any applicable law or regulation;
+  (b) create, promote, or facilitate harm, harassment, fraud, deception, or
+      the spread of misinformation;
+  (c) produce content that is unlawful or that infringes the rights of others;
+  (d) reverse-engineer, resell, sublicense, or redistribute the Software as
+      your own.
+You are solely responsible for the documents you provide to the Software and for
+how you use the output it generates.
+
+
+3. LOCAL AND PRIVATE OPERATION
+
+The Software is designed to run entirely on your own device. It does not transmit
+your documents, chats, or data to Haifa Intelligence or to any third party. You
+are responsible for the security, confidentiality, and backup of the data stored
+on your machine.
+
+
+4. SYSTEM REQUIREMENTS AND PERFORMANCE
+
+You acknowledge that the Software runs local artificial-intelligence models and
+is resource-intensive. You confirm that your hardware is suitable for this
+purpose - a dedicated NVIDIA GPU (8 GB VRAM minimum, 16 GB recommended) is
+expected for reasonable performance. The speed and quality of results depend on
+your hardware and require certain third-party components (such as Ollama and the
+AI models) to be installed as described in the documentation. Haifa Intelligence
+is not responsible for performance on hardware that does not meet these
+requirements.
+
+
+5. THIRD-PARTY COMPONENTS
+
+The Software relies on third-party and open-source components (including, without
+limitation, Ollama and the Qwen model family), each distributed under its own
+license. Your use of those components is subject to their respective terms.
+
+
+6. CHANGES TO THIS AGREEMENT
+
+Haifa Intelligence may modify these terms, as well as the features, models, or
+system requirements of the Software, in future releases. Your continued use of
+the Software after such changes take effect constitutes your acceptance of the
+revised terms.
+
+
+7. NO WARRANTY
+
+THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTY OF ANY
+KIND, WHETHER EXPRESS OR IMPLIED. AI-generated output may be inaccurate or
+incomplete and must not be relied upon as professional, medical, legal, or
+scientific advice without independent verification.
+
+
+8. LIMITATION OF LIABILITY
+
+To the maximum extent permitted by applicable law, Haifa Intelligence shall not
+be liable for any direct, indirect, incidental, or consequential damages arising
+from the use of, or the inability to use, the Software.
+
+
+9. ACCEPTANCE
+
+By selecting "I Agree" and installing the Software, you confirm that you have
+read, understood, and accepted this Agreement.
+
+
+Copyright (c) 2026 Haifa Intelligence. All rights reserved.

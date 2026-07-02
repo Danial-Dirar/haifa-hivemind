@@ -26,6 +26,19 @@
 
 ---
 
+## Download
+
+Grab the latest build from the
+[**Releases**](https://github.com/Danial-Dirar/haifa-hivemind/releases) page:
+
+- **Windows** — `Haifa HiveMind Setup <version>.exe` (installer)
+- **Linux** — `Haifa HiveMind-<version>.AppImage`
+
+You'll also need **[Ollama](https://ollama.com/download)** installed and the
+models pulled once — see [`CLIENT_GUIDE.md`](CLIENT_GUIDE.md). The packaged app
+bundles everything except the optional QLoRA fine-tuning, which needs a separate
+Python + CUDA setup (`requirements-train.txt`).
+
 ## What it does
 
 - 📄 **Ingest** PDF, DOCX, TXT and **image** documents into a private knowledge base.

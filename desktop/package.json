@@ -25,7 +25,12 @@
       { "from": "../backend", "to": "backend", "filter": ["**/*", "!data/**", "!.venv/**", "!__pycache__/**"] }
     ],
     "win": { "target": ["nsis"], "icon": "build/icon.ico" },
-    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "perMachine": false },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "license": "build/eula.txt"
+    },
     "linux": { "target": ["AppImage"], "icon": "build/icon.png", "category": "Science" }
   }
 }

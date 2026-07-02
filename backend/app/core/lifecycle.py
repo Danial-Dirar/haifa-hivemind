@@ -53,6 +53,12 @@ class LifecycleManager:
             await asyncio.sleep(0.5)
         raise RuntimeError("Ollama server did not come up in time.")
 
+    async def ensure_server(self) -> None:
+        """Start the Ollama server if needed (without loading a model).
+        Used by first-run setup so models can be pulled before warming."""
+        async with self._lock:
+            await self._start_server()
+
     async def turn_on(self) -> ModelState:
         async with self._lock:
             self._state = ModelState.STARTING

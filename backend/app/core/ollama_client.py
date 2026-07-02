@@ -51,6 +51,17 @@ class OllamaClient:
             r.raise_for_status()
             return r.json()["embedding"]
 
+    async def pull_stream(self, model: str):
+        """Download a model, yielding Ollama's progress dicts as they arrive."""
+        async with httpx.AsyncClient(timeout=None) as c:
+            async with c.stream(
+                "POST", f"{self.base_url}/api/pull", json={"model": model, "stream": True}
+            ) as resp:
+                resp.raise_for_status()
+                async for line in resp.aiter_lines():
+                    if line.strip():
+                        yield json.loads(line)
+
     async def warm(self, model: str) -> None:
         """Load a model into VRAM and pin it there (keep_alive = -1)."""
         async with httpx.AsyncClient(timeout=120.0) as c:

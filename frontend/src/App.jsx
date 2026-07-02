@@ -6,6 +6,9 @@ import TrainingPanel from "./components/TrainingPanel.jsx";
 import ChatSidebar from "./components/ChatSidebar.jsx";
 import TrashModal from "./components/TrashModal.jsx";
 import Message from "./components/Message.jsx";
+import EulaGate from "./components/EulaGate.jsx";
+import Onboarding from "./components/Onboarding.jsx";
+import { EULA_VERSION } from "./lib/eula.js";
 import * as api from "./lib/api.js";
 
 let idc = 0;
@@ -29,6 +32,34 @@ export default function App() {
   const [conversationId, setConversationId] = useState(null);
   const [trashCount, setTrashCount] = useState(0);
   const [trashOpen, setTrashOpen] = useState(false);
+
+  // First-run gate: license (Linux/desktop) -> setup (auto model download) -> app
+  const isDesktop = typeof window !== "undefined" && !!window.hivemind?.desktop;
+  const platform = typeof window !== "undefined" ? window.hivemind?.platform : "";
+  const [gate, setGate] = useState("loading"); // loading|eula|setup|ready
+
+  useEffect(() => {
+    if (api.DEMO) return setGate("ready");
+    // Windows accepts the EULA in the installer; other desktops accept it here.
+    const needEula =
+      isDesktop && platform !== "win32" && !localStorage.getItem(EULA_VERSION);
+    if (needEula) return setGate("eula");
+    checkSetup();
+  }, []);
+
+  async function checkSetup() {
+    try {
+      const s = await api.getSetupStatus();
+      setGate(s.ready ? "ready" : "setup");
+    } catch {
+      setGate("setup"); // let onboarding surface the problem/retry
+    }
+  }
+
+  function acceptEula() {
+    try { localStorage.setItem(EULA_VERSION, new Date().toISOString()); } catch {}
+    checkSetup();
+  }
 
   const scrollRef = useRef();
   const fileRef = useRef();
@@ -207,6 +238,10 @@ export default function App() {
   }
 
   const offline = modelState === "off";
+
+  if (gate === "loading") return null;
+  if (gate === "eula") return <EulaGate onAccept={acceptEula} />;
+  if (gate === "setup") return <Onboarding onReady={() => setGate("ready")} />;
 
   return (
     <>

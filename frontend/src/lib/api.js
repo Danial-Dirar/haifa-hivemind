@@ -63,6 +63,40 @@ const DEMO_REPLY =
   "version, follow the **install guide in the README**. 🧠";
 
 // ---------------------------------------------------------------------------
+// First-run setup / onboarding
+// ---------------------------------------------------------------------------
+export const getSetupStatus = () =>
+  DEMO
+    ? Promise.resolve({ ollama_installed: true, ollama_running: true, models: {}, ready: true, required: [] })
+    : j("/setup/status");
+
+export async function streamSetupPull(onEvent, signal) {
+  if (DEMO) {
+    onEvent({ type: "done" });
+    return;
+  }
+  const res = await fetch(`${API_BASE}/setup/pull`, { method: "POST", signal });
+  if (!res.ok) throw new Error("Could not start model download");
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const frames = buffer.split("\n\n");
+    buffer = frames.pop() || "";
+    for (const frame of frames) {
+      const line = frame.trim();
+      if (!line.startsWith("data:")) continue;
+      try {
+        onEvent(JSON.parse(line.slice(5).trim()));
+      } catch {}
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Model power
 // ---------------------------------------------------------------------------
 export const getModelStatus = () =>

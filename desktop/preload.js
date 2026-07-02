@@ -4,5 +4,6 @@ const { contextBridge } = require("electron");
 
 contextBridge.exposeInMainWorld("hivemind", {
   desktop: true,
+  platform: process.platform, // "win32" | "linux" | "darwin"
   version: process.env.npm_package_version || "0.1.0",
 });
