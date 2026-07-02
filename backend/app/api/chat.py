@@ -79,17 +79,30 @@ async def chat(
         yield _sse({"type": "conversation", "id": conv_id, "new": new_conv})
         yield _sse({"type": "sources", "sources": sources})
         collected: list[str] = []
+        saved = False
+
+        def _persist() -> None:
+            # Runs on normal completion AND on client-side Stop (disconnect),
+            # so whatever was generated so far is never lost.
+            nonlocal saved
+            if saved:
+                return
+            answer = "".join(collected).strip()
+            if answer:
+                chat_history.add_message(conv_id, "assistant", answer, sources)
+            saved = True
+
         try:
             async for tok in ollama.chat_stream(
                 settings.chat_model, messages, images=image_bytes
             ):
                 collected.append(tok)
                 yield _sse({"type": "token", "text": tok})
+            yield _sse({"type": "done"})
         except Exception as exc:  # noqa: BLE001
             yield _sse({"type": "error", "detail": str(exc)})
-        answer = "".join(collected).strip()
-        if answer:
-            chat_history.add_message(conv_id, "assistant", answer, sources)
-        yield _sse({"type": "done"})
+        finally:
+            # On Stop, the client disconnects → CancelledError propagates here.
+            _persist()
 
     return StreamingResponse(gen(), media_type="text/event-stream")

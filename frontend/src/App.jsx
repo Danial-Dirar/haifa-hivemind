@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Send, Paperclip, X } from "lucide-react";
+import { Send, Paperclip, X, Square } from "lucide-react";
 import PowerControls from "./components/PowerControls.jsx";
 import DocumentsPanel from "./components/DocumentsPanel.jsx";
 import TrainingPanel from "./components/TrainingPanel.jsx";
@@ -32,6 +32,7 @@ export default function App() {
 
   const scrollRef = useRef();
   const fileRef = useRef();
+  const abortRef = useRef(null);
 
   const showToast = (text, err = false) => {
     setToast({ text, err });
@@ -72,6 +73,8 @@ export default function App() {
 
   async function runQuery({ query, imgs = [], reconsider = false }) {
     setSending(true);
+    const controller = new AbortController();
+    abortRef.current = controller;
     const aiId = uid();
     setMessages((ms) => [
       ...ms,
@@ -89,16 +92,26 @@ export default function App() {
           else if (evt.type === "token") patchLast((m) => ({ ...m, content: m.content + evt.text }));
           else if (evt.type === "error") showToast(evt.detail, true);
           else if (evt.type === "done") patchLast((m) => ({ ...m, streaming: false }));
-        }
+        },
+        controller.signal
       );
     } catch (e) {
-      patchLast((m) => ({ ...m, streaming: false, content: m.content || `⚠️ ${e.message}` }));
-      showToast(e.message, true);
+      if (e.name === "AbortError") {
+        patchLast((m) => ({ ...m, stopped: true })); // user pressed Stop — keep partial
+      } else {
+        patchLast((m) => ({ ...m, content: m.content || `⚠️ ${e.message}` }));
+        showToast(e.message, true);
+      }
     } finally {
       patchLast((m) => ({ ...m, streaming: false }));
+      abortRef.current = null;
       setSending(false);
       refreshConversations();
     }
+  }
+
+  function stop() {
+    abortRef.current?.abort();
   }
 
   async function send() {
@@ -270,14 +283,27 @@ export default function App() {
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
               }}
+              onPaste={(e) => {
+                const files = [...e.clipboardData.items]
+                  .filter((it) => it.type.startsWith("image/"))
+                  .map((it) => it.getAsFile())
+                  .filter(Boolean);
+                if (files.length) { e.preventDefault(); addImages(files); }
+              }}
             />
             <div className="composer-actions">
               <button className="attach" disabled={offline} onClick={() => fileRef.current?.click()}>
                 <Paperclip size={18} />
               </button>
-              <button className="send" disabled={offline || sending || !input.trim()} onClick={send}>
-                <Send size={18} />
-              </button>
+              {sending ? (
+                <button className="send stop" onClick={stop} title="Stop generating">
+                  <Square size={16} fill="currentColor" />
+                </button>
+              ) : (
+                <button className="send" disabled={offline || !input.trim()} onClick={send}>
+                  <Send size={18} />
+                </button>
+              )}
             </div>
           </div>
           <input ref={fileRef} type="file" accept="image/*" multiple hidden

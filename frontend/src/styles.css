@@ -166,6 +166,8 @@ body {
 .composer-actions { display: flex; align-items: center; gap: 8px; }
 .send { width: 40px; height: 40px; border-radius: 11px; border: none; background: var(--accent); color: #1a1400; display: grid; place-items: center; cursor: pointer; flex-shrink: 0; }
 .send:disabled { opacity: 0.4; cursor: not-allowed; }
+.send.stop { background: var(--red); color: #fff; animation: pulse 1.6s infinite; }
+.send.stop:hover { filter: brightness(1.08); }
 .attach { width: 40px; height: 40px; border-radius: 11px; border: 1px solid var(--border); background: transparent; color: var(--text-dim); display: grid; place-items: center; cursor: pointer; }
 .attach:hover { color: var(--accent); border-color: var(--accent); }
 .thumbs { display: flex; gap: 8px; max-width: 820px; margin: 0 auto 10px; flex-wrap: wrap; }
