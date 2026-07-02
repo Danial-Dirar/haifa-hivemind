@@ -42,7 +42,7 @@ pyz = PYZ(a.pure)
 exe = EXE(
     pyz, a.scripts, [], exclude_binaries=True,
     name="hivemind-backend",
-    console=True,
+    console=False,   # no stray cmd window on Windows; Electron pipes logs to a file
     disable_windowed_traceback=False,
 )
 coll = COLLECT(

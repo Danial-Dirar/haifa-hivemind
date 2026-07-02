@@ -50,6 +50,7 @@ function startBackend() {
   } catch {}
   backend = spawn(cmd, args, {
     cwd,
+    windowsHide: true, // never flash a console window for the backend on Windows
     env: {
       ...process.env,
       HIVEMIND_PORT: String(PORT),
