@@ -13,6 +13,12 @@
 </p>
 
 <p align="center">
+  <a href="https://haifa-hivemind-git-main-danial-dirars-projects.vercel.app"><img src="https://img.shields.io/badge/%E2%96%B6%20Live%20Demo-try%20the%20interface-f5b301?style=for-the-badge&labelColor=1a1400" alt="Live Demo" /></a>
+</p>
+
+<p align="center"><sub>👆 Interface preview only (sample data). The real AI runs locally — see <a href="#live-demo-interface-only--vercel">install</a>.</sub></p>
+
+<p align="center">
   <img alt="on-device" src="https://img.shields.io/badge/AI-100%25%20on--device-f5b301?style=flat-square" />
   <img alt="stack" src="https://img.shields.io/badge/Ollama%20·%20Qwen2.5--VL-informational?style=flat-square&color=38bdf8" />
   <img alt="ui" src="https://img.shields.io/badge/Electron%20·%20React-14171d?style=flat-square" />
@@ -99,6 +105,8 @@ npm run dist:linux    # Linux AppImage
 one installer. See [`CLIENT_GUIDE.md`](CLIENT_GUIDE.md) for the end-user steps.
 
 ## Live demo (interface only) — Vercel
+
+**▶ Live:** <https://haifa-hivemind-git-main-danial-dirars-projects.vercel.app>
 
 The UI can be deployed to Vercel as a **static interface preview**. There's no
 backend or AI in the demo — it runs on sample data, streams a canned reply, and
