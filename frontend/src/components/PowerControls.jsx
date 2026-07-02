@@ -1,16 +1,11 @@
 import { useEffect, useState } from "react";
-import { Power, Pause, Play, Cpu, Loader2 } from "lucide-react";
+import { Cpu, Loader2 } from "lucide-react";
 import * as api from "../lib/api.js";
 
-const LABEL = {
-  running: "Online",
-  paused: "Paused",
-  off: "Offline",
-  starting: "Starting",
-};
-
+// Single On/Off toggle. On  = all models loaded and ready.
+//                        Off = all models unloaded (GPU/VRAM freed).
 export default function PowerControls({ onToast, onStateChange }) {
-  const [status, setStatus] = useState({ state: "off", vram_mb: 0, server_up: false });
+  const [status, setStatus] = useState({ state: "off", vram_mb: 0 });
   const [busy, setBusy] = useState(false);
 
   async function refresh() {
@@ -27,53 +22,42 @@ export default function PowerControls({ onToast, onStateChange }) {
     return () => clearInterval(t);
   }, []);
 
-  async function act(fn, label) {
+  const on = status.state === "running";
+  const working = busy || status.state === "starting";
+
+  async function toggle() {
     setBusy(true);
     try {
-      await fn();
+      await (on ? api.modelOff() : api.modelOn());
       await refresh();
     } catch (e) {
-      onToast?.(e.message || `Failed to ${label}`, true);
+      onToast?.(e.message || "Action failed", true);
     } finally {
       setBusy(false);
     }
   }
 
-  const st = status.state;
   return (
     <div className="panel">
       <div className="panel-title"><Cpu size={13} /> AI Engine</div>
-      <div className="status-row">
-        <span className="status-pill">
-          <span className={`dot ${st}`} />
-          {LABEL[st] || st}
-        </span>
-        <span className="vram">
-          {status.vram_mb ? `${(status.vram_mb / 1024).toFixed(1)} GB VRAM` : "—"}
-        </span>
-      </div>
-      <div className="power-grid">
+      <div className="engine-row">
+        <div>
+          <div className="engine-state">
+            <span className={`dot ${working ? "starting" : on ? "running" : "off"}`} />
+            {working ? "Starting…" : on ? "Online" : "Off"}
+          </div>
+          <div className="vram">
+            {status.vram_mb ? `${(status.vram_mb / 1024).toFixed(1)} GB VRAM in use` : "No GPU memory in use"}
+          </div>
+        </div>
         <button
-          className={`pbtn on ${st === "running" ? "active" : ""}`}
-          disabled={busy || st === "running"}
-          onClick={() => act(st === "paused" ? api.modelResume : api.modelOn, "start")}
+          className={`switch ${on ? "on" : ""}`}
+          disabled={working}
+          onClick={toggle}
+          aria-label="Toggle AI engine"
+          title={on ? "Turn the AI off (frees GPU)" : "Turn the AI on"}
         >
-          {busy && st !== "running" ? <Loader2 size={17} className="spin" /> : <Play size={17} />}
-          On
-        </button>
-        <button
-          className={`pbtn pause ${st === "paused" ? "active" : ""}`}
-          disabled={busy || st !== "running"}
-          onClick={() => act(api.modelPause, "pause")}
-        >
-          <Pause size={17} /> Pause
-        </button>
-        <button
-          className={`pbtn off ${st === "off" ? "active" : ""}`}
-          disabled={busy || st === "off"}
-          onClick={() => act(api.modelOff, "stop")}
-        >
-          <Power size={17} /> Off
+          <span className="knob">{working && <Loader2 size={12} className="spin" />}</span>
         </button>
       </div>
     </div>

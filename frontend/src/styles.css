@@ -134,6 +134,15 @@ body {
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
 .vram { font-family: var(--mono); font-size: 10px; color: var(--text-faint); }
 
+/* On/Off toggle */
+.engine-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.engine-state { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+.switch { width: 54px; height: 30px; flex-shrink: 0; border-radius: 16px; background: #23262e; border: 1px solid var(--border-strong); position: relative; cursor: pointer; transition: all 0.2s; padding: 0; }
+.switch.on { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 14px rgba(245,179,1,0.35); }
+.switch .knob { position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #e7e9ee; transition: all 0.2s; display: grid; place-items: center; color: #1a1400; }
+.switch.on .knob { left: 27px; background: #1a1400; color: var(--accent); }
+.switch:disabled { opacity: 0.55; cursor: not-allowed; }
+
 .power-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .pbtn { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 11px 6px; border-radius: 11px; border: 1px solid var(--border); background: #0f1116; color: var(--text-dim); font-size: 11px; cursor: pointer; transition: all 0.15s; }
 .pbtn:hover:not(:disabled) { border-color: var(--border-strong); color: var(--text); transform: translateY(-1px); }

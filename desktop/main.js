@@ -5,7 +5,7 @@
 //   3. Load the compiled React UI.
 //   4. Cleanly shut the backend down on quit (so no orphaned GPU/RAM usage).
 
-const { app, BrowserWindow, dialog, shell } = require("electron");
+const { app, BrowserWindow, dialog, shell, Tray, Menu } = require("electron");
 const { spawn } = require("child_process");
 const path = require("path");
 const http = require("http");
@@ -17,6 +17,9 @@ const HEALTH = `http://127.0.0.1:${PORT}/health`;
 
 let backend = null;
 let win = null;
+let tray = null;
+let isQuitting = false;   // false => closing the window hides it to the tray
+let cleanupDone = false;
 
 // --- Backend resolution -----------------------------------------------------
 function backendDir() {
@@ -108,6 +111,14 @@ function createWindow() {
     return { action: "deny" };
   });
 
+  // Closing the window keeps the app alive in the system tray (Windows-style).
+  win.on("close", (e) => {
+    if (!isQuitting) {
+      e.preventDefault();
+      win.hide();
+    }
+  });
+
   win.loadFile(path.join(__dirname, "splash.html"));
   win.once("ready-to-show", () => win.show());
 }
@@ -123,9 +134,53 @@ function loadApp() {
   }
 }
 
+function createTray() {
+  const icon = path.join(
+    __dirname, "build", process.platform === "win32" ? "icon.ico" : "icon.png"
+  );
+  try {
+    tray = new Tray(icon);
+  } catch {
+    return; // tray not available on this platform/session
+  }
+  tray.setToolTip("Haifa HiveMind");
+  tray.setContextMenu(
+    Menu.buildFromTemplate([
+      { label: "Open Haifa HiveMind", click: () => { if (win) { win.show(); win.focus(); } } },
+      { type: "separator" },
+      { label: "Quit Haifa HiveMind", click: () => { isQuitting = true; app.quit(); } },
+    ])
+  );
+  tray.on("click", () => {
+    if (win) win.isVisible() ? win.focus() : win.show();
+  });
+}
+
+// Ask the backend to unload every model from VRAM before we exit.
+function unloadModels() {
+  return new Promise((resolve) => {
+    const req = http.request(
+      { host: "127.0.0.1", port: PORT, path: "/model/off", method: "POST", timeout: 8000 },
+      (res) => { res.resume(); res.on("end", resolve); }
+    );
+    req.on("error", resolve);
+    req.on("timeout", () => { req.destroy(); resolve(); });
+    req.end();
+  });
+}
+
+async function gracefulQuit() {
+  if (cleanupDone) return;
+  cleanupDone = true;
+  await unloadModels();   // free GPU/VRAM
+  stopBackend();          // then stop the Python backend
+  app.exit(0);
+}
+
 // --- Lifecycle --------------------------------------------------------------
 app.whenReady().then(async () => {
   createWindow();
+  createTray();
   startBackend();
   const ok = await waitForBackend();
   if (!ok) {
@@ -159,9 +214,13 @@ function stopBackend() {
   }
 }
 
-app.on("before-quit", stopBackend);
-app.on("window-all-closed", () => {
-  stopBackend();
-  if (process.platform !== "darwin") app.quit();
+// On real quit, free VRAM + stop the backend first (async), then exit.
+app.on("before-quit", (e) => {
+  if (cleanupDone) return;
+  e.preventDefault();
+  isQuitting = true;
+  gracefulQuit();
 });
+// Keep running in the tray when the window is closed — do NOT quit here.
+app.on("window-all-closed", () => {});
 process.on("exit", stopBackend);

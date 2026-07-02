@@ -67,34 +67,32 @@ class LifecycleManager:
             self._state = ModelState.RUNNING
             return self._state
 
-    async def pause(self) -> ModelState:
+    async def unload_all(self) -> ModelState:
+        """Evict EVERY model currently in VRAM (chat + embed). Frees the GPU but
+        leaves the Ollama server running. This is the 'Off' state of the toggle
+        and is also what we call on app quit so no VRAM is left in use."""
         async with self._lock:
             if await ollama.is_up():
-                await ollama.unload(settings.chat_model)
-                self._state = ModelState.PAUSED
-            else:
-                self._state = ModelState.OFF
+                for m in await ollama.running():
+                    name = m.get("name")
+                    if name:
+                        try:
+                            await ollama.unload(name)
+                        except Exception:
+                            pass
+            self._state = ModelState.OFF
             return self._state
+
+    # "Off" and "Pause" both simply free the GPU (server stays up so the next
+    # "On" is instant). Ollama is a background service, so we never stop it here.
+    async def pause(self) -> ModelState:
+        return await self.unload_all()
+
+    async def turn_off(self) -> ModelState:
+        return await self.unload_all()
 
     async def resume(self) -> ModelState:
         return await self.turn_on()
-
-    async def turn_off(self) -> ModelState:
-        async with self._lock:
-            if await ollama.is_up():
-                try:
-                    await ollama.unload(settings.chat_model)
-                except Exception:
-                    pass
-            if self.owns_server:
-                self._proc.terminate()
-                try:
-                    self._proc.wait(timeout=10)
-                except subprocess.TimeoutExpired:
-                    self._proc.kill()
-            self._proc = None
-            self._state = ModelState.OFF
-            return self._state
 
     async def status(self) -> dict:
         """Reconcile our tracked state with reality and report VRAM usage."""

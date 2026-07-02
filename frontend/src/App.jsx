@@ -237,7 +237,7 @@ export default function App() {
     setImages((cur) => [...cur, ...imgs]);
   }
 
-  const offline = modelState === "off";
+  const offline = modelState !== "running"; // usable only when the engine is on
 
   if (gate === "loading") return null;
   if (gate === "eula") return <EulaGate onAccept={acceptEula} />;
