@@ -6,12 +6,18 @@ GPU with ~16 GB VRAM running Qwen2.5-VL 7B via Ollama.
 """
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent  # backend/
-DATA_DIR = BASE_DIR / "data"
+
+# Where user data lives. In a packaged app the install folder is read-only
+# (Program Files on Windows, the read-only AppImage mount on Linux), so the
+# Electron shell passes HIVEMIND_DATA_DIR pointing at a writable per-user path.
+# In development it falls back to backend/data.
+DEFAULT_DATA_DIR = Path(os.environ.get("HIVEMIND_DATA_DIR", str(BASE_DIR / "data")))
 
 
 class Settings(BaseSettings):
@@ -34,21 +40,38 @@ class Settings(BaseSettings):
     keep_alive_running: int = -1
 
     # --- RAG ------------------------------------------------------------
-    chroma_dir: Path = DATA_DIR / "chroma"
     collection_name: str = "hivemind_docs"
     chunk_size: int = 1200          # characters per chunk
     chunk_overlap: int = 200
     retrieve_top_k: int = 6
 
-    # --- Storage --------------------------------------------------------
-    upload_dir: Path = DATA_DIR / "uploads"
-    training_dir: Path = DATA_DIR / "training"
-    chat_images_dir: Path = DATA_DIR / "chat_images"  # images sent inside chats
-    db_path: Path = DATA_DIR / "hivemind.db"
+    # --- Storage (root; all subpaths derive from it) --------------------
+    data_dir: Path = DEFAULT_DATA_DIR
 
     # --- Adapter (LoRA) -------------------------------------------------
     # When a fine-tuned adapter exists, Ollama serves this model tag instead.
     adapter_model_tag: str = "qwen2.5vl-haifa"
+
+    # --- Derived writable paths ----------------------------------------
+    @property
+    def chroma_dir(self) -> Path:
+        return self.data_dir / "chroma"
+
+    @property
+    def upload_dir(self) -> Path:
+        return self.data_dir / "uploads"
+
+    @property
+    def training_dir(self) -> Path:
+        return self.data_dir / "training"
+
+    @property
+    def chat_images_dir(self) -> Path:
+        return self.data_dir / "chat_images"
+
+    @property
+    def db_path(self) -> Path:
+        return self.data_dir / "hivemind.db"
 
     def ensure_dirs(self) -> None:
         for p in (self.chroma_dir, self.upload_dir, self.training_dir, self.chat_images_dir):

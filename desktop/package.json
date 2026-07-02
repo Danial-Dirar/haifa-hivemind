@@ -1,6 +1,6 @@
 {
   "name": "haifa-hivemind-desktop",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Haifa HiveMind — local private research AI by Haifa Intelligence",
   "author": "Haifa Intelligence",
   "main": "main.js",
@@ -22,7 +22,7 @@
     "files": ["main.js", "preload.js", "splash.html"],
     "extraResources": [
       { "from": "../frontend/dist", "to": "web" },
-      { "from": "../backend", "to": "backend", "filter": ["**/*", "!data/**", "!.venv/**", "!__pycache__/**"] }
+      { "from": "../backend", "to": "backend", "filter": ["**/*", "!data/**", "!.venv/**", "!__pycache__/**", "!build/**"] }
     ],
     "win": { "target": ["nsis"], "icon": "build/icon.ico" },
     "nsis": {

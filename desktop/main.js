@@ -25,28 +25,43 @@ function backendDir() {
     : path.join(process.resourcesPath, "backend");
 }
 
-// Prefer a bundled PyInstaller exe if present, else fall back to system Python.
+// Prefer the bundled PyInstaller backend (onedir) if present, else fall back to
+// system Python (used only in development).
 function resolveBackendCommand() {
   const dir = backendDir();
   const exe = process.platform === "win32" ? "hivemind-backend.exe" : "hivemind-backend";
-  const bundled = path.join(dir, "dist", exe);
-  if (fs.existsSync(bundled)) return { cmd: bundled, args: [], cwd: dir };
+  const bundled = path.join(dir, "dist", "hivemind-backend", exe);
+  if (fs.existsSync(bundled)) return { cmd: bundled, args: [], cwd: path.dirname(bundled) };
   const py = process.platform === "win32" ? "python" : "python3";
   return { cmd: py, args: ["run.py"], cwd: dir };
 }
 
+function logPath() {
+  return path.join(app.getPath("userData"), "backend.log");
+}
+
 function startBackend() {
   const { cmd, args, cwd } = resolveBackendCommand();
+  // Capture backend output to a log file so failures can be diagnosed.
+  let out = "ignore";
+  try {
+    out = fs.openSync(logPath(), "a");
+    fs.writeSync(out, `\n=== Haifa HiveMind backend start ${new Date().toISOString()} ===\n`);
+  } catch {}
   backend = spawn(cmd, args, {
     cwd,
-    env: { ...process.env, HIVEMIND_PORT: String(PORT) },
-    stdio: "ignore",
+    env: {
+      ...process.env,
+      HIVEMIND_PORT: String(PORT),
+      // Install folder is read-only when packaged; write data to a per-user path.
+      HIVEMIND_DATA_DIR: path.join(app.getPath("userData"), "data"),
+    },
+    stdio: out === "ignore" ? "ignore" : ["ignore", out, out],
   });
   backend.on("error", (err) => {
     dialog.showErrorBox(
-      "Backend failed to start",
-      `Could not launch the AI engine.\n\n${err.message}\n\n` +
-        "Make sure Python and Ollama are installed (see the setup guide)."
+      "Could not start the AI engine",
+      `${err.message}\n\nA log was written to:\n${logPath()}`
     );
   });
 }
@@ -62,7 +77,7 @@ function pingHealth() {
   });
 }
 
-async function waitForBackend(timeoutMs = 60000) {
+async function waitForBackend(timeoutMs = 150000) {
   const start = Date.now();
   while (Date.now() - start < timeoutMs) {
     if (await pingHealth()) return true;
@@ -113,11 +128,19 @@ app.whenReady().then(async () => {
   startBackend();
   const ok = await waitForBackend();
   if (!ok) {
-    dialog.showErrorBox(
-      "AI engine not responding",
-      "The backend did not start in time. Please check that Python and Ollama " +
-        "are installed, then restart Haifa HiveMind."
-    );
+    const choice = dialog.showMessageBoxSync({
+      type: "error",
+      title: "AI engine didn't start",
+      message: "The AI engine didn't respond in time.",
+      detail:
+        "This can happen on the very first launch (Windows may be scanning the " +
+        "app) — closing and reopening Haifa HiveMind usually fixes it.\n\n" +
+        "If it keeps happening, open the log and share it with support.",
+      buttons: ["Open log", "OK"],
+      defaultId: 1,
+      cancelId: 1,
+    });
+    if (choice === 0) shell.openPath(logPath());
   }
   loadApp();
 
