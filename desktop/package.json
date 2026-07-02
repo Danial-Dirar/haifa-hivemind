@@ -1,6 +1,6 @@
 {
   "name": "haifa-hivemind-desktop",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Haifa HiveMind — local private research AI by Haifa Intelligence",
   "author": "Haifa Intelligence",
   "main": "main.js",

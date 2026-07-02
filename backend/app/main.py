@@ -17,7 +17,6 @@ from app.api import chat, conversations, documents, feedback, model, setup, trai
 from app.config import settings
 from app.core import history
 from app.core.db import init_db
-from app.core.ollama_client import ollama
 
 
 @asynccontextmanager
@@ -58,12 +57,11 @@ app.mount(
 
 @app.get("/health")
 async def health() -> dict:
-    return {
-        "status": "ok",
-        "version": __version__,
-        "ollama_up": await ollama.is_up(),
-        "chat_model": settings.chat_model,
-    }
+    # Must return INSTANTLY: the desktop shell polls this to detect startup and
+    # gives up after ~1.5s per ping. Do NOT call Ollama here — when Ollama isn't
+    # running yet that check takes ~2s and caused false "AI engine didn't start"
+    # errors even though the server was fully up. Use /setup/status for Ollama.
+    return {"status": "ok", "version": __version__, "chat_model": settings.chat_model}
 
 
 # In a packaged build the compiled frontend is copied here and served directly,

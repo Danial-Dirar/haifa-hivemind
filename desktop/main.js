@@ -73,7 +73,7 @@ function pingHealth() {
       resolve(res.statusCode === 200);
     });
     req.on("error", () => resolve(false));
-    req.setTimeout(1500, () => { req.destroy(); resolve(false); });
+    req.setTimeout(3000, () => { req.destroy(); resolve(false); });
   });
 }
 
