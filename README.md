@@ -108,8 +108,8 @@ auto-detected from the hostname (anything that isn't `localhost`).
 Deploy:
 
 1. On [vercel.com](https://vercel.com), **Import** this GitHub repo.
-2. Vercel reads [`vercel.json`](vercel.json) — it builds `frontend/` and serves
-   `frontend/dist`. No settings to change.
+2. Set **Root Directory** to `frontend` — the framework auto-detects as **Vite**
+   (Build `npm run build`, Output `dist`). Nothing else to change.
 3. Deploy. (Optional: set `VITE_DEMO=1` to force demo mode anywhere.)
 
 > The desktop app and local dev (`localhost`) always run in **full mode** against
