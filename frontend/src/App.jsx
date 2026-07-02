@@ -209,7 +209,16 @@ export default function App() {
   const offline = modelState === "off";
 
   return (
-    <div className="app">
+    <>
+      {api.DEMO && (
+        <div className="demo-ribbon">
+          <span>
+            🔬 <b>Live demo</b> — this is the interface only. The private AI runs entirely on <b>your own machine</b>.
+          </span>
+          <a href={api.REPO_URL} target="_blank" rel="noreferrer">Install the real thing →</a>
+        </div>
+      )}
+      <div className={`app ${api.DEMO ? "demo" : ""}`}>
       <ChatSidebar
         conversations={conversations}
         activeId={conversationId}
@@ -327,6 +336,7 @@ export default function App() {
         />
       )}
       {toast && <div className={`toast ${toast.err ? "err" : ""}`}>{toast.text}</div>}
-    </div>
+      </div>
+    </>
   );
 }

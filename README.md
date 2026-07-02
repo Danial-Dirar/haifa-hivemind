@@ -98,6 +98,23 @@ npm run dist:linux    # Linux AppImage
 `electron-builder` packages the compiled UI (`web/`) and the backend binary into
 one installer. See [`CLIENT_GUIDE.md`](CLIENT_GUIDE.md) for the end-user steps.
 
+## Live demo (interface only) — Vercel
+
+The UI can be deployed to Vercel as a **static interface preview**. There's no
+backend or AI in the demo — it runs on sample data, streams a canned reply, and
+shows a ribbon pointing users back here to install the real thing. Demo mode is
+auto-detected from the hostname (anything that isn't `localhost`).
+
+Deploy:
+
+1. On [vercel.com](https://vercel.com), **Import** this GitHub repo.
+2. Vercel reads [`vercel.json`](vercel.json) — it builds `frontend/` and serves
+   `frontend/dist`. No settings to change.
+3. Deploy. (Optional: set `VITE_DEMO=1` to force demo mode anywhere.)
+
+> The desktop app and local dev (`localhost`) always run in **full mode** against
+> the real backend — only public hosts fall back to the demo.
+
 ## The learning loop
 
 1. **Instant** — every reject can add an *avoid* memory and re-answer from a new

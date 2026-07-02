@@ -40,8 +40,23 @@ body {
 ::-webkit-scrollbar-thumb { background: #23262e; border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
 ::-webkit-scrollbar-thumb:hover { background: #333743; background-clip: content-box; }
 
+/* ---- Demo ribbon (Vercel preview) ---- */
+.demo-ribbon {
+  position: fixed; top: 0; left: 0; right: 0; height: 40px; z-index: 100;
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  background: linear-gradient(90deg, #f5b301, #ffd54a);
+  color: #1a1400; font-size: 13px; font-weight: 500; padding: 0 16px;
+  box-shadow: 0 2px 16px rgba(245, 179, 1, 0.3);
+}
+.demo-ribbon a {
+  color: #1a1400; font-weight: 700; text-decoration: none;
+  border-bottom: 2px solid rgba(26, 20, 0, 0.4); white-space: nowrap;
+}
+.demo-ribbon a:hover { border-color: #1a1400; }
+
 /* ---- Layout: chats (left) · chat (middle) · controls (right) ---- */
 .app { display: grid; grid-template-columns: 284px 1fr 324px; height: 100vh; }
+.app.demo { height: calc(100vh - 40px); margin-top: 40px; }
 .sidebar {
   background: linear-gradient(180deg, var(--bg-2), var(--bg));
   display: flex; flex-direction: column; min-height: 0;
